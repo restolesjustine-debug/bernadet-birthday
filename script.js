@@ -8,14 +8,62 @@ openButton.addEventListener("click", () => {
   if (opening) setTimeout(() => letterPaper.scrollIntoView({behavior:"smooth",block:"start"}), 100);
 });
 
-const music = document.getElementById("birthdayMusic");
+/* Gentle original birthday soundtrack, synthesized in the browser.
+   No extra audio file or external music link is needed. */
+let audioContext = null;
+let musicTimer = null;
+let musicStep = 0;
+let masterGain = null;
 const musicToggle = document.getElementById("musicToggle");
 const musicLabel = document.getElementById("musicLabel");
+const melody = [261.63, 329.63, 392.00, 329.63, 293.66, 349.23, 440.00, 349.23,
+                261.63, 329.63, 392.00, 523.25, 440.00, 392.00, 329.63, 293.66];
+function playSoftNote(frequency, startTime, duration, volume) {
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(frequency, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.08);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(masterGain);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.03);
+}
+function scheduleMusic() {
+  if (!audioContext || audioContext.state !== "running") return;
+  const now = audioContext.currentTime + 0.04;
+  const note = melody[musicStep % melody.length];
+  playSoftNote(note, now, 1.05, 0.13);
+  if (musicStep % 4 === 0) playSoftNote(note / 2, now, 1.5, 0.055);
+  if (musicStep % 4 === 2) playSoftNote(note * 1.5, now, 0.8, 0.035);
+  musicStep++;
+}
 musicToggle.addEventListener("click", async () => {
-  if (music.paused) {
-    try { await music.play(); musicLabel.textContent = "Pause the music"; musicToggle.setAttribute("aria-pressed","true"); }
-    catch { musicLabel.textContent = "Add music.mp3 first"; }
-  } else { music.pause(); musicLabel.textContent = "Play a little music"; musicToggle.setAttribute("aria-pressed","false"); }
+  try {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = 0.55;
+      masterGain.connect(audioContext.destination);
+    }
+    if (audioContext.state === "running" && musicTimer) {
+      clearInterval(musicTimer);
+      musicTimer = null;
+      await audioContext.suspend();
+      musicLabel.textContent = "Play a little music";
+      musicToggle.setAttribute("aria-pressed", "false");
+    } else {
+      await audioContext.resume();
+      scheduleMusic();
+      musicTimer = setInterval(scheduleMusic, 720);
+      musicLabel.textContent = "Pause the music";
+      musicToggle.setAttribute("aria-pressed", "true");
+    }
+  } catch {
+    musicLabel.textContent = "Music unavailable in this browser";
+  }
 });
 
 const observer = new IntersectionObserver(entries => {
