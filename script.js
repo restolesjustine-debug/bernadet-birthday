@@ -40,6 +40,25 @@ function scheduleMusic() {
   if (musicStep % 4 === 2) playSoftNote(note * 1.5, now, 0.8, 0.035);
   musicStep++;
 }
+window.addEventListener("load", () => { startMusicIfAllowed(); }, { once: true });
+window.addEventListener("pointerdown", () => { if (!musicTimer) startMusicIfAllowed(); }, { once: true });
+window.addEventListener("keydown", () => { if (!musicTimer) startMusicIfAllowed(); }, { once: true });
+async function startMusicIfAllowed() {
+  try {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = 0.55;
+      masterGain.connect(audioContext.destination);
+    }
+    if (musicTimer) return;
+    await audioContext.resume();
+    scheduleMusic();
+    musicTimer = setInterval(scheduleMusic, 720);
+    musicLabel.textContent = "Pause the music";
+    musicToggle.setAttribute("aria-pressed", "true");
+  } catch {}
+}
 musicToggle.addEventListener("click", async () => {
   try {
     if (!audioContext) {
