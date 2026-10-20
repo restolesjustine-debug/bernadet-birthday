@@ -14,3 +14,10 @@ a{color:inherit}.topbar{height:76px;display:flex;align-items:center;justify-cont
 @keyframes float{0%,100%{translate:0 0}50%{translate:0 -10px}}@keyframes slowspin{to{transform:rotate(360deg)}}@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}@keyframes pulse{50%{box-shadow:0 0 0 6px #a9687222}}@keyframes letteropen{from{opacity:0;transform:translateY(22px) scale(.985);clip-path:inset(0 0 100% 0)}to{opacity:1;transform:translateY(0) scale(1);clip-path:inset(0 0 0 0)}}
 @media(max-width:700px){.topbar{height:65px;padding:0 6vw}.music-toggle{padding:8px 11px;font-size:.7rem}.hero{padding:65px 7vw 25px;grid-template-columns:1fr;gap:40px;min-height:auto}h1{font-size:clamp(3.8rem,17vw,6rem)}.hero-art{min-height:350px;margin:0 4vw}.hero-bottom{margin-top:10px;font-size:.49rem;gap:15px}.section-wrap{padding:78px 7vw}.section-heading{display:block}.section-note{max-width:100%}.photo-grid{grid-template-columns:1fr;gap:28px}.photo-large,.photo-small{margin:0}.photo-frame img,.photo-small .photo-frame img{max-height:none}.letter-section{padding:78px 6vw}.letter-paper{padding:30px 23px}.letter-paper p{font-size:.9rem}footer{flex-direction:column;text-align:center}.flower-a{left:3%}.hero-number{font-size:10rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}.reveal{opacity:1;transform:none}}
+
+
+/* Single-photo birthday memory layout */
+.photo-grid-single { display: flex; justify-content: center; }
+.photo-grid-single .photo-large { width: min(760px, 100%); margin: 0 auto; }
+.photo-grid-single .photo-frame img { width: 100%; height: auto; max-height: 620px; object-fit: cover; }
+@media (max-width: 700px) { .photo-grid-single .photo-large { width: 100%; } }
