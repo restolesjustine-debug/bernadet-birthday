@@ -16,15 +16,15 @@ let musicStep = 0;
 let masterGain = null;
 const musicToggle = document.getElementById("musicToggle");
 const musicLabel = document.getElementById("musicLabel");
-const melody = [261.63, 329.63, 392.00, 329.63, 293.66, 349.23, 440.00, 349.23,
-                261.63, 329.63, 392.00, 523.25, 440.00, 392.00, 329.63, 293.66];
+const melody = [392.00, 440.00, 493.88, 587.33, 523.25, 440.00, 392.00, 329.63,
+                349.23, 392.00, 440.00, 523.25, 493.88, 440.00, 392.00, 349.23];
 function playSoftNote(frequency, startTime, duration, volume) {
   const osc = audioContext.createOscillator();
   const gain = audioContext.createGain();
-  osc.type = "sine";
+  osc.type = "triangle";
   osc.frequency.setValueAtTime(frequency, startTime);
   gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.08);
+  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.22);
   gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
   osc.connect(gain);
   gain.connect(masterGain);
@@ -35,9 +35,9 @@ function scheduleMusic() {
   if (!audioContext || audioContext.state !== "running") return;
   const now = audioContext.currentTime + 0.04;
   const note = melody[musicStep % melody.length];
-  playSoftNote(note, now, 1.05, 0.13);
-  if (musicStep % 4 === 0) playSoftNote(note / 2, now, 1.5, 0.055);
-  if (musicStep % 4 === 2) playSoftNote(note * 1.5, now, 0.8, 0.035);
+  playSoftNote(note, now, 1.65, 0.085);
+  if (musicStep % 4 === 0) playSoftNote(note / 2, now, 2.0, 0.035);
+  if (musicStep % 4 === 2) playSoftNote(note * 1.5, now, 1.2, 0.022);
   musicStep++;
 }
 window.addEventListener("load", () => { startMusicIfAllowed(); }, { once: true });
@@ -54,7 +54,7 @@ async function startMusicIfAllowed() {
     if (musicTimer) return;
     await audioContext.resume();
     scheduleMusic();
-    musicTimer = setInterval(scheduleMusic, 720);
+    musicTimer = setInterval(scheduleMusic, 980);
     musicLabel.textContent = "Pause the music";
     musicToggle.setAttribute("aria-pressed", "true");
   } catch {}

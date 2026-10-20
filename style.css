@@ -21,3 +21,23 @@ a{color:inherit}.topbar{height:76px;display:flex;align-items:center;justify-cont
 .photo-grid-single .photo-large { width: min(760px, 100%); margin: 0 auto; }
 .photo-grid-single .photo-frame img { width: 100%; height: auto; max-height: 620px; object-fit: cover; }
 @media (max-width: 700px) { .photo-grid-single .photo-large { width: 100%; } }
+
+
+/* Extra breathing room and touch-friendly controls on phones */
+@media (max-width: 700px) {
+  .topbar { gap: 12px; padding: 0 5vw; }
+  .wordmark { font-size: 1.55rem; }
+  .music-toggle { min-height: 44px; padding: 10px 13px; white-space: nowrap; }
+  .hero { padding-top: 48px; }
+  .hero-art { min-height: 300px; }
+  .section-wrap { padding-top: 64px; padding-bottom: 64px; }
+  .photo-grid-single .photo-large { width: 100%; }
+  .photo-grid-single .photo-frame { padding: 6px; }
+  .photo-grid-single .photo-frame img { width: 100%; height: auto; max-height: none; object-fit: contain; }
+  .photo-sticker { left: 5px; bottom: 12px; max-width: calc(100% - 20px); font-size: .76rem; padding: 6px 9px; }
+  .photo-card figcaption { gap: 9px; }
+  .photo-card figcaption strong { overflow-wrap: anywhere; }
+  .letter-button { min-height: 48px; width: auto; max-width: 100%; }
+  .letter-paper { overflow-wrap: anywhere; }
+  .closing { padding: 72px 7vw 80px; }
+}
